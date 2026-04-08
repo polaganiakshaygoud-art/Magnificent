@@ -1,0 +1,67 @@
+{% extends "tech_base.html" %}
+{% block title %}Checkout — TechZone{% endblock %}
+{% block content %}
+<div class="inner-page">
+  <h1 class="page-title">Secure Checkout</h1>
+  <div class="co-layout">
+    <form action="{{ url_for('tech_checkout') }}" method="post" class="co-form">
+      <div class="co-card">
+        <h3><i class="fas fa-user"></i> Contact Info</h3>
+        <div class="form-grid">
+          <div><label class="inp-label">First Name</label><input type="text" class="inp" placeholder="John" required></div>
+          <div><label class="inp-label">Last Name</label><input type="text" class="inp" placeholder="Doe" required></div>
+          <div class="span2"><label class="inp-label">Email</label><input type="email" class="inp" placeholder="john@email.com" required></div>
+          <div class="span2"><label class="inp-label">Phone</label><input type="tel" class="inp" placeholder="+1 000 000 0000"></div>
+        </div>
+      </div>
+      <div class="co-card">
+        <h3><i class="fas fa-location-dot"></i> Delivery Address</h3>
+        <div class="form-grid">
+          <div class="span2"><label class="inp-label">Street Address</label><input type="text" class="inp" placeholder="123 Main Street" required></div>
+          <div><label class="inp-label">City</label><input type="text" class="inp" placeholder="New York" required></div>
+          <div><label class="inp-label">ZIP Code</label><input type="text" class="inp" placeholder="10001" required></div>
+          <div class="span2">
+            <label class="inp-label">Country</label>
+            <select class="inp"><option>United States</option><option>United Kingdom</option><option>Canada</option><option>India</option><option>Australia</option></select>
+          </div>
+        </div>
+      </div>
+      <div class="co-card">
+        <h3><i class="fas fa-credit-card"></i> Payment</h3>
+        <div class="form-grid">
+          <div class="span2"><label class="inp-label">Card Number</label>
+            <input type="text" class="inp" placeholder="0000 0000 0000 0000" maxlength="19" required
+                   oninput="this.value=this.value.replace(/\D/g,'').substring(0,16).replace(/(.{4})/g,'$1 ').trim()"></div>
+          <div class="span2"><label class="inp-label">Name on Card</label><input type="text" class="inp" placeholder="John Doe" required></div>
+          <div><label class="inp-label">Expiry</label><input type="text" class="inp" placeholder="MM/YY" maxlength="5" required></div>
+          <div><label class="inp-label">CVV</label><input type="text" class="inp" placeholder="123" maxlength="4" required></div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-blue btn-full btn-lg">
+        <i class="fas fa-lock"></i> Place Order — ${{ "%.2f"|format(total + (0 if total >= 49 else 4.99)) }}
+      </button>
+    </form>
+
+    <div class="order-box" style="position:sticky;top:80px">
+      <h3>Order Summary</h3>
+      {% for item in items %}
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)">
+        <img src="{{ item.product.image }}" style="width:48px;height:48px;object-fit:contain;background:#f8fafc;border-radius:6px;padding:4px"
+             onerror="this.src='https://via.placeholder.com/48/f8fafc/2563eb?text=T'">
+        <div style="flex:1"><p style="font-size:13px;font-weight:600">{{ item.product.name }}</p><p style="font-size:11px;color:var(--muted)">Qty: {{ item.qty }}</p></div>
+        <span style="font-weight:700;font-size:13px">${{ "%.2f"|format(item.sub) }}</span>
+      </div>
+      {% endfor %}
+      <div style="height:12px"></div>
+      <div class="sum-row"><span>Subtotal</span><span>${{ "%.2f"|format(total) }}</span></div>
+      <div class="sum-row"><span>Delivery</span><span>{% if total >= 49 %}FREE{% else %}$4.99{% endif %}</span></div>
+      <div class="sum-row sum-total"><span>Total</span><span>${{ "%.2f"|format(total + (0 if total >= 49 else 4.99)) }}</span></div>
+      <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;font-size:12px;color:var(--muted)">
+        <span><i class="fas fa-lock" style="color:var(--blue);margin-right:6px"></i> SSL Secure Payment</span>
+        <span><i class="fas fa-shield-halved" style="color:var(--blue);margin-right:6px"></i> 1-Year Warranty</span>
+        <span><i class="fas fa-undo" style="color:var(--blue);margin-right:6px"></i> 15-Day Returns</span>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
