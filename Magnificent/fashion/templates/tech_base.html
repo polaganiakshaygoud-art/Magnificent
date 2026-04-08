@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}TechZone Store{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --blue:    #2563eb;
+      --blue2:   #1d4ed8;
+      --cyan:    #06b6d4;
+      --bg:      #f0f4ff;
+      --dark:    #0f172a;
+      --card:    #ffffff;
+      --muted:   #64748b;
+      --line:    #e2e8f0;
+      --red:     #ef4444;
+      --green:   #22c55e;
+      --orange:  #f97316;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark)}
+    a{text-decoration:none;color:inherit}
+    img{display:block;max-width:100%}
+    button{font-family:inherit;cursor:pointer}
+
+    /* TOPBAR */
+    .topbar{background:var(--dark);color:#fff;text-align:center;padding:8px;font-size:12px;letter-spacing:1px}
+    .topbar span{color:var(--cyan)}
+
+    /* HEADER — 3D bottom border */
+    header{
+      background:#fff; position:sticky; top:0; z-index:200;
+      border-bottom:none;
+      box-shadow: 0 1px 0 rgba(37,99,235,.4), 0 2px 0 rgba(37,99,235,.18), 0 4px 0 rgba(37,99,235,.07), 0 6px 20px rgba(0,0,0,.1);
+    }
+    .nav-inner{max-width:1300px;margin:0 auto;padding:0 32px;height:64px;display:flex;align-items:center;gap:24px}
+    .logo{font-size:22px;font-weight:800;color:var(--blue);letter-spacing:-1px;margin-right:auto;display:flex;align-items:center;gap:8px}
+    .logo i{color:var(--cyan)}
+    .nav-links{display:flex;gap:20px}
+    .nav-links a{font-size:13px;font-weight:500;color:var(--muted);transition:.2s;padding:4px 0}
+    .nav-links a:hover{color:var(--blue)}
+    .nav-right{display:flex;align-items:center;gap:12px}
+    .search-form{display:flex}
+    .search-form input{
+      padding:9px 14px;border-radius:8px 0 0 8px;font-size:13px;outline:none;width:200px;transition:.2s;
+      border:none;
+      box-shadow: 0 0 0 1.5px rgba(37,99,235,.25), inset 0 1px 3px rgba(0,0,0,.06), inset 0 -1px 0 rgba(37,99,235,.1);
+    }
+    .search-form input:focus{box-shadow:0 0 0 2px var(--blue), 0 2px 0 rgba(37,99,235,.3), inset 0 1px 3px rgba(0,0,0,.06);}
+    .search-form button{padding:9px 14px;background:var(--blue);color:#fff;border:none;border-radius:0 8px 8px 0;font-size:13px;cursor:pointer}
+    .cart-link{display:flex;align-items:center;gap:8px;background:var(--blue);color:#fff;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600;transition:.2s}
+    .cart-link:hover{background:var(--blue2)}
+
+    /* SWITCH STORE BANNER */
+    .switch-banner{background:linear-gradient(90deg,#1e1b4b,#312e81);color:#fff;padding:12px 32px;display:flex;align-items:center;justify-content:center;gap:16px;font-size:13px}
+    .switch-btn{background:#fff;color:#312e81;padding:7px 18px;border-radius:6px;font-size:12px;font-weight:700;transition:.2s}
+    .switch-btn:hover{background:#e0e7ff}
+
+    /* HERO */
+    .hero{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 50%,#0f172a 100%);padding:70px 40px;text-align:center;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(6,182,212,.15) 0%,transparent 70%)}
+    .hero-tag{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--cyan);margin-bottom:16px;display:block}
+    .hero h1{font-size:56px;font-weight:800;color:#fff;line-height:1.1;margin-bottom:16px}
+    .hero h1 span{color:var(--cyan)}
+    .hero p{font-size:16px;color:rgba(255,255,255,.6);margin-bottom:32px}
+    .hero-btns{display:flex;gap:14px;justify-content:center}
+
+    /* BUTTONS */
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 24px;border-radius:8px;font-size:13px;font-weight:600;border:2px solid transparent;transition:.2s;cursor:pointer}
+    .btn-blue{background:var(--blue);color:#fff;border-color:var(--blue)}
+    .btn-blue:hover{background:var(--blue2);border-color:var(--blue2);transform:translateY(-1px)}
+    .btn-outline{background:transparent;color:var(--blue);border-color:var(--blue)}
+    .btn-outline:hover{background:var(--blue);color:#fff}
+    .btn-full{width:100%;justify-content:center}
+    .btn-lg{padding:14px 28px;font-size:14px}
+
+    /* CATEGORY STRIP */
+    .cat-strip{background:#fff;border-bottom:1px solid var(--line);padding:14px 32px;display:flex;gap:10px;overflow-x:auto}
+    .cat-pill{
+      padding:7px 18px;border-radius:50px;font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap;transition:.25s;cursor:pointer;
+      border:none;
+      box-shadow: 0 0 0 1.5px rgba(37,99,235,.2), 0 2px 0 rgba(37,99,235,.08), 0 4px 8px rgba(0,0,0,.06);
+    }
+    .cat-pill:hover,.cat-pill.active{
+      background:var(--blue);color:#fff;
+      box-shadow: 0 0 0 1.5px var(--blue), 0 3px 0 rgba(37,99,235,.4), 0 6px 16px rgba(37,99,235,.25);
+      transform:translateY(-2px);
+    }
+
+    /* SHOP LAYOUT */
+    .shop-layout{display:flex;max-width:1300px;margin:0 auto;padding:28px 32px;gap:24px}
+
+    /* SIDEBAR */
+    .sidebar{
+      width:220px;min-width:220px;background:#fff;border-radius:12px;padding:22px;height:fit-content;position:sticky;top:76px;
+      box-shadow: 0 0 0 1px rgba(37,99,235,.12), 0 2px 0 rgba(37,99,235,.06), 0 4px 0 rgba(37,99,235,.03), 0 8px 20px rgba(0,0,0,.07);
+    }
+    .sidebar h3{font-size:15px;font-weight:700;margin-bottom:18px}
+    .filter-block{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+    .filter-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px}
+    .filter-block label{display:flex;align-items:center;gap:8px;font-size:13px;padding:3px 0;cursor:pointer;color:var(--muted)}
+    .filter-block label:hover{color:var(--dark)}
+    .filter-block input[type=radio]{accent-color:var(--blue)}
+
+    /* PRODUCTS */
+    .products-area{flex:1}
+    .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+    .count-text{font-size:13px;color:var(--muted)}
+    .count-text strong{color:var(--dark)}
+    .sort-sel{padding:8px 12px;border:1.5px solid var(--line);border-radius:8px;font-size:13px;outline:none;background:#fff;cursor:pointer}
+
+    /* GRID */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+
+    /* CARD — 3D layered border */
+    .card{
+      background:#fff; border-radius:12px; overflow:hidden; transition:.25s; cursor:pointer;
+      transform-style:preserve-3d;
+      box-shadow:
+        0 0 0 1px rgba(37,99,235,.15),
+        0 2px 0 1px rgba(37,99,235,.08),
+        0 4px 0 1px rgba(37,99,235,.04),
+        0 6px 16px rgba(0,0,0,.08);
+    }
+    .card:hover{
+      transform:translateY(-8px) rotateX(5deg) rotateY(4deg);
+      box-shadow:
+        0 0 0 1.5px rgba(37,99,235,.6),
+        0 3px 0 1.5px rgba(37,99,235,.3),
+        0 6px 0 1.5px rgba(37,99,235,.12),
+        0 10px 0 1.5px rgba(37,99,235,.05),
+        0 20px 40px rgba(37,99,235,.2),
+        0 36px 60px rgba(0,0,0,.12);
+    }
+    .card-img{position:relative;aspect-ratio:1;overflow:hidden;background:#f8fafc;display:flex;align-items:center;justify-content:center;}
+    .card-img img{width:85%;height:85%;object-fit:contain;transition:transform .4s;}
+    .card:hover .card-img img{transform:scale(1.1);}
+    .badge{position:absolute;top:10px;left:10px;padding:3px 9px;border-radius:50px;font-size:10px;font-weight:700;text-transform:uppercase}
+    .badge-new{background:#dbeafe;color:var(--blue)}
+    .badge-hot{background:#fef3c7;color:#d97706}
+    .badge-sale{background:#fee2e2;color:var(--red)}
+    .card-body{padding:14px}
+    .card-brand{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--blue);margin-bottom:4px}
+    .card-name{font-size:14px;font-weight:600;margin-bottom:8px;line-height:1.3}
+    .card-price{font-size:18px;font-weight:700;color:var(--dark);margin-bottom:12px}
+    .card-btn{width:100%;padding:9px;background:var(--blue);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:.2s}
+    .card-btn:hover{background:var(--blue2)}
+
+    /* INNER PAGE */
+    .inner-page{max-width:1100px;margin:0 auto;padding:36px 32px}
+    .page-title{font-size:28px;font-weight:700;margin-bottom:28px}
+    .back-link{display:inline-flex;align-items:center;gap:6px;margin-bottom:24px;color:var(--muted);font-size:13px;transition:.2s}
+    .back-link:hover{color:var(--blue)}
+
+    /* PRODUCT DETAIL */
+    .pd-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px}
+    .pd-img{background:#f8fafc;border-radius:12px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;padding:32px}
+    .pd-img img{width:100%;height:100%;object-fit:contain}
+    .pd-brand{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--blue);margin-bottom:8px}
+    .pd-name{font-size:30px;font-weight:700;line-height:1.2;margin-bottom:12px}
+    .pd-price{font-size:32px;font-weight:800;color:var(--blue);margin-bottom:16px}
+    .pd-desc{font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:24px}
+    .pd-actions{display:flex;gap:12px;margin-bottom:20px}
+    .pd-actions .btn{flex:1}
+    .pd-perks{display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--muted)}
+    .pd-perks i{color:var(--blue);margin-right:6px;width:16px}
+
+    /* CART */
+    .cart-layout{display:grid;grid-template-columns:1fr 320px;gap:28px}
+    .cart-table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 8px rgba(0,0,0,.06)}
+    .cart-table th{padding:14px 16px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);border-bottom:1px solid var(--line)}
+    .cart-table td{padding:16px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:middle}
+    .cart-table img{width:64px;height:64px;object-fit:contain;background:#f8fafc;border-radius:8px;padding:4px}
+    .cart-name{font-size:14px;font-weight:600}
+    .cart-brand{font-size:11px;color:var(--blue);font-weight:600;text-transform:uppercase}
+    .rm-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:15px;transition:.2s}
+    .rm-btn:hover{color:var(--red)}
+    .order-box{
+      background:#fff;border-radius:12px;padding:24px;height:fit-content;position:sticky;top:80px;
+      box-shadow: 0 0 0 1px rgba(37,99,235,.15), 0 3px 0 rgba(37,99,235,.08), 0 6px 0 rgba(37,99,235,.03), 0 16px 36px rgba(0,0,0,.1);
+    }
+    .order-box h3{font-size:17px;font-weight:700;margin-bottom:18px}
+    .sum-row{display:flex;justify-content:space-between;padding:9px 0;font-size:14px;color:var(--muted);border-bottom:1px solid var(--line)}
+    .sum-total{font-size:17px;font-weight:700;color:var(--dark);border:none;padding-top:14px}
+
+    /* CHECKOUT */
+    .co-layout{display:grid;grid-template-columns:1fr 340px;gap:28px}
+    .co-form{display:flex;flex-direction:column;gap:18px}
+    .co-card{
+      background:#fff;border-radius:12px;padding:24px;
+      box-shadow: 0 0 0 1px rgba(37,99,235,.15), 0 3px 0 rgba(37,99,235,.08), 0 6px 0 rgba(37,99,235,.03), 0 12px 28px rgba(0,0,0,.08);
+    }
+    .co-card h3{font-size:16px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+    .co-card h3 i{color:var(--blue)}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .span2{grid-column:1/-1}
+    .inp{
+      width:100%;padding:11px 13px;border-radius:8px;font-size:14px;outline:none;transition:.2s;font-family:'Inter',sans-serif;
+      border:none;
+      box-shadow: 0 0 0 1.5px rgba(37,99,235,.2), inset 0 1px 3px rgba(0,0,0,.05), inset 0 -1px 0 rgba(37,99,235,.08);
+    }
+    .inp:focus{box-shadow:0 0 0 2px var(--blue), 0 2px 0 rgba(37,99,235,.3), inset 0 1px 3px rgba(0,0,0,.05);}
+    .inp-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);display:block;margin-bottom:5px}
+
+    /* EMPTY */
+    .empty{text-align:center;padding:60px 20px;color:var(--muted)}
+    .empty i{font-size:48px;margin-bottom:16px;display:block;color:var(--blue);opacity:.3}
+    .empty h3{font-size:20px;color:var(--dark);margin-bottom:8px}
+
+    /* FOOTER — 3D top border */
+    footer{
+      background:var(--dark);color:rgba(255,255,255,.6);padding:48px 32px 24px;margin-top:60px;
+      border-top:none;
+      box-shadow: 0 -1px 0 rgba(37,99,235,.4), 0 -2px 0 rgba(37,99,235,.18), 0 -4px 0 rgba(37,99,235,.07), 0 -8px 24px rgba(0,0,0,.2);
+    }
+    .footer-inner{max-width:1300px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;margin-bottom:32px}
+    .footer-logo{font-size:22px;font-weight:800;color:#fff;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+    .footer-logo i{color:var(--cyan)}
+    .footer-inner p{font-size:13px;line-height:1.8}
+    .footer-col h5{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#fff;margin-bottom:14px}
+    .footer-col a{display:block;font-size:13px;margin-bottom:8px;transition:.2s}
+    .footer-col a:hover{color:var(--cyan)}
+    .footer-bottom{max-width:1300px;margin:0 auto;border-top:1px solid rgba(255,255,255,.1);padding-top:20px;text-align:center;font-size:12px}
+  </style>
+</head>
+<body>
+
+<div class="topbar">⚡ <span>MEGA DEALS</span> — Free delivery on orders over $49 &nbsp;|&nbsp; Easy 15-day returns</div>
+
+<header>
+  <div class="nav-inner">
+    <a href="{{ url_for('tech') }}" class="logo"><i class="fas fa-bolt"></i> TechZone</a>
+    <div class="nav-links">
+      <a href="{{ url_for('tech') }}">All</a>
+      <a href="{{ url_for('tech', category='Mobiles') }}">Mobiles</a>
+      <a href="{{ url_for('tech', category='Laptops') }}">Laptops</a>
+      <a href="{{ url_for('tech', category='Earphones') }}">Earphones</a>
+      <a href="{{ url_for('tech', category='Tablets') }}">Tablets</a>
+      <a href="{{ url_for('tech', category='Wearables') }}">Wearables</a>
+      <a href="{{ url_for('tech', category='Chargers') }}">Chargers</a>
+    </div>
+    <div class="nav-right">
+      <form class="search-form" action="{{ url_for('tech') }}" method="get">
+        <input type="text" name="search" placeholder="Search phones, laptops...">
+        <button type="submit"><i class="fas fa-search"></i></button>
+      </form>
+      <a href="{{ url_for('tech_cart') }}" class="cart-link">
+        <i class="fas fa-cart-shopping"></i> Cart ({{ cart_count }})
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- SWITCH STORE BANNER -->
+<div class="switch-bar-fashion">
+  <div class="switch-bar-text-f">
+    <span class="switch-icon-f">👗</span>
+    <span>Looking for Luxury Fashion?</span>
+  </div>
+  <a href="{{ url_for('home') }}" class="switch-3d-btn-f">
+    <span class="btn-glow-f"></span>
+    <span class="btn-bottom-f"></span>
+    <span class="btn-top-f">
+      <i class="fas fa-crown"></i>
+      Switch to MAISON LUXE
+      <i class="fas fa-arrow-right btn-arrow-f"></i>
+    </span>
+  </a>
+</div>
+<style>
+.switch-bar-fashion {
+  background: linear-gradient(90deg,#0a0a0a 0%,#1a1208 50%,#0a0a0a 100%);
+  padding: 14px 40px;
+  display: flex; align-items: center; justify-content: center; gap: 28px;
+  position: relative; overflow: hidden;
+}
+.switch-bar-fashion::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(201,169,110,.04) 40px,rgba(201,169,110,.04) 41px);
+  animation: scanline-f 4s linear infinite;
+}
+@keyframes scanline-f { from{background-position:0 0} to{background-position:80px 0} }
+.switch-bar-text-f {
+  display: flex; align-items: center; gap: 10px;
+  color: rgba(255,255,255,.85); font-size: 14px; font-weight: 500;
+  position: relative; z-index: 1;
+}
+.switch-icon-f { font-size: 18px; animation: pulse-f 1.5s ease-in-out infinite; }
+@keyframes pulse-f { 0%,100%{transform:scale(1)} 50%{transform:scale(1.35)} }
+
+.switch-3d-btn-f {
+  position: relative; z-index: 1;
+  display: inline-flex; text-decoration: none;
+  transform-style: preserve-3d;
+  filter: drop-shadow(0 8px 20px rgba(201,169,110,.55));
+  animation: float-f 3s ease-in-out infinite;
+  cursor: pointer;
+}
+@keyframes float-f {
+  0%,100% { transform: translateY(0) rotateX(0deg); }
+  50%      { transform: translateY(-5px) rotateX(3deg); }
+}
+.switch-3d-btn-f:hover {
+  animation: none;
+  transform: translateY(-7px) rotateX(10deg) scale(1.07);
+  filter: drop-shadow(0 18px 36px rgba(201,169,110,.9));
+}
+.switch-3d-btn-f:active {
+  animation: none;
+  transform: translateY(2px) rotateX(-4deg) scale(.97);
+}
+.btn-top-f {
+  display: flex; align-items: center; gap: 10px;
+  padding: 13px 28px;
+  background: linear-gradient(135deg,#c9a96e,#a07840,#c9a96e);
+  background-size: 200% 200%;
+  animation: grad-f 3s ease infinite;
+  color: #0a0a0a; font-size: 14px; font-weight: 700; letter-spacing: .5px;
+  border-radius: 10px;
+  position: relative; z-index: 2;
+  border-top: 1px solid rgba(255,255,255,.4);
+  border-left: 1px solid rgba(255,255,255,.2);
+  white-space: nowrap;
+}
+@keyframes grad-f {
+  0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%}
+}
+.btn-bottom-f {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg,#7a5c2e,#5a3e18);
+  border-radius: 10px;
+  transform: translateY(6px);
+  z-index: 1;
+}
+.btn-glow-f {
+  position: absolute; inset: -5px;
+  background: linear-gradient(135deg,#c9a96e,#e8d5a3,#c9a96e,#a07840);
+  background-size: 300% 300%;
+  border-radius: 14px; z-index: 0;
+  filter: blur(10px);
+  animation: glow-rf 3s linear infinite, glow-pf 1.5s ease-in-out infinite;
+}
+@keyframes glow-rf { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
+@keyframes glow-pf { 0%,100%{opacity:.65} 50%{opacity:1} }
+.btn-arrow-f { transition: transform .2s ease; }
+.switch-3d-btn-f:hover .btn-arrow-f { transform: translateX(6px); }
+</style>
+
+<main>{% block content %}{% endblock %}</main>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo"><i class="fas fa-bolt"></i> TechZone</div>
+      <p>Your one-stop destination for the latest smartphones, laptops, earphones and accessories at the best prices.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Categories</h5>
+      <a href="{{ url_for('tech', category='Mobiles') }}">Mobiles</a>
+      <a href="{{ url_for('tech', category='Laptops') }}">Laptops</a>
+      <a href="{{ url_for('tech', category='Earphones') }}">Earphones</a>
+      <a href="{{ url_for('tech', category='Tablets') }}">Tablets</a>
+    </div>
+    <div class="footer-col">
+      <h5>Help</h5>
+      <a href="#">Track Order</a>
+      <a href="#">Returns</a>
+      <a href="#">Warranty</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+  <div class="footer-bottom">&copy; 2024 TechZone. All rights reserved.</div>
+</footer>
+
+</body>
+</html>

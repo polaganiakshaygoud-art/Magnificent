@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Your Bag — MAISON LUXE{% endblock %}
+{% block content %}
+
+<h1 class="page-title">Your Bag</h1>
+
+{% if items %}
+<div class="cart-wrap">
+  <div>
+    <table class="cart-table">
+      <thead>
+        <tr>
+          <th colspan="2">Item</th>
+          <th>Price</th>
+          <th>Qty</th>
+          <th>Subtotal</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+        <tr>
+          <td style="width:90px">
+            <img src="{{ item.product.image }}" alt="{{ item.product.name }}"
+                 onerror="this.src='https://via.placeholder.com/72x90/141414/c9a96e?text=L'">
+          </td>
+          <td>
+            <p class="cart-cat">{{ item.product.category }}</p>
+            <p class="cart-name">{{ item.product.name }}</p>
+          </td>
+          <td>${{ "%.2f"|format(item.product.price) }}</td>
+          <td>{{ item.qty }}</td>
+          <td style="color:var(--gold);font-weight:600">${{ "%.2f"|format(item.sub) }}</td>
+          <td>
+            <a href="{{ url_for('remove', pid=item.product.id) }}" class="rm-btn" title="Remove">
+              <i class="fas fa-times"></i>
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="order-box">
+    <h3>Order Summary</h3>
+    <div class="sum-row"><span>Subtotal</span><span>${{ "%.2f"|format(total) }}</span></div>
+    <div class="sum-row"><span>Shipping</span><span>{% if total >= 150 %}Complimentary{% else %}$15.00{% endif %}</span></div>
+    <div class="sum-row sum-total">
+      <span>Total</span>
+      <span>${{ "%.2f"|format(total + (0 if total >= 150 else 15)) }}</span>
+    </div>
+    <a href="{{ url_for('checkout') }}" class="btn btn-gold btn-full" style="margin-top:24px">
+      <i class="fas fa-lock"></i> &nbsp; Proceed to Checkout
+    </a>
+    <a href="{{ url_for('home') }}" class="btn btn-ghost btn-full" style="margin-top:10px">
+      Continue Shopping
+    </a>
+  </div>
+</div>
+
+{% else %}
+<div class="empty">
+  <div class="empty-icon"><i class="fas fa-bag-shopping"></i></div>
+  <h3>Your bag is empty</h3>
+  <p style="margin:8px 0 24px">Discover our curated collection of luxury pieces</p>
+  <a href="{{ url_for('home') }}" class="btn btn-gold">Explore Collection</a>
+</div>
+{% endif %}
+
+{% endblock %}
